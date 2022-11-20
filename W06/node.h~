@@ -1,0 +1,221 @@
+/***********************************************************************
+* Header:
+*    Node
+* Summary:
+*    This contains the prototypes and implementation of the node class.
+*    This class is similar to the STL version on std::node
+* Author
+*    Jatsiri Detzani and Rolando Rodriguez
+************************************************************************/
+#include <cassert>
+#include <iostream>
+
+using std::cin;
+using std::cout;
+using std::endl;
+
+#ifndef NODE_H
+#define NODE_H
+
+template <class T>
+
+class Node
+{
+public:
+   //member variables
+   T  data;
+   Node * pNext;
+   Node * pPrev;
+
+   /**************************************
+    *   constructor and non-default constructor
+    **************************************/
+   Node() : pNext(NULL), pPrev(NULL), data(NULL) {};
+   Node(const T & element) {
+      data = element;
+      pNext = NULL;
+      pPrev = NULL;
+   }
+}; // node
+
+/**************************************************
+* copy()
+* Copy a linked-list. Takes a pointer to a Node as a parameter
+* and returns a newly created linked-list containing a copy of all the nodes
+* below the list represented by the parameter.
+* This is a non-memeber function.
+****************************************************/
+template <class T>
+Node <T> * copy(const Node <T> * pSource) throw(const char*)
+{
+   
+   Node <T> * pDestination = new Node<T>(pSource->data);
+
+   const Node <T> * pSrc = pSource;
+   Node <T> * pDes = pDestination;
+
+   for (Node <T> * p = pSrc->pNext; p; p = p->pNext)
+      pDes = insert(pDes, p->data, true);
+
+   return pDestination;
+}
+
+/**************************************************
+* insert()
+* Insert a new node into the current linked-list. The first parameter is the
+* reference Node next to wich the new Node is inserted into the list. The second
+* parameter is the value to be placed in the new Node, the third parameter
+* called after is to determinate if the new node will be after or before the
+* current node.
+****************************************************/
+template <class T>
+Node <T> * insert( Node <T> * pCurrent,const T & element, bool after = false) throw(const char*)
+{
+   Node <T> * pNew = new Node <T>(element);
+
+   //insert before the current Node
+   if (pCurrent != NULL && after == false)
+   {
+      //the next node of pNew will be the current node
+      pNew->pNext = pCurrent;
+      //the previous node of pNew will be the previous node of the current node
+      pNew->pPrev = pCurrent->pPrev;
+      //the previous node of current will be pNew
+      pCurrent->pPrev = pNew;
+
+      //
+      if (pNew->pPrev)
+         pNew->pPrev->pNext = pNew;
+   }
+
+   // insert after the current Node
+   if (pCurrent != NULL && after == true)
+   {
+      //the previous node of pNew will be the current node
+      pNew->pPrev = pCurrent;
+      //the next node of pNew will be the next node of the current node
+      pNew->pNext = pCurrent->pNext;
+      //the next node of the current node is pNew
+      pCurrent->pNext = pNew;
+
+      //
+      if (pNew->pNext)
+         pNew->pNext->pPrev = pNew;
+   }
+
+   //return the new node
+   return pNew;
+}
+
+/**************************************************
+* insert() Two parameters. (just after the current Node)
+* Insert a new node into the current linked-list. The first parameter is the
+* reference Nde next to wich the new Node is inserted into the list. The second
+* parameter is the value to be placed in the new Node.
+****************************************************/
+template <class T>
+Node <T> * insert(const T & element, Node <T> * pCurrent) throw(const char*)
+{
+   Node <T> * pNew = new Node <T>(element);
+
+   //this follows the logic of after the current node
+   if (pCurrent != NULL)
+   {
+      pNew->pPrev = pCurrent;
+      pNew->pNext = pCurrent->pNext;
+      pCurrent->pNext = pNew;
+
+      if (pNew->pNext)
+         pNew->pNext->pPrev = pNew;
+   }
+
+   return pNew;
+}
+
+/**************************************************
+* find()
+* Find the Node correspondig to a given passed vaur from a given linked-list.
+* The first parameter is aponter to the front of the list, the second is the
+* value to be found. The return value is a ponter to the found node if one
+* exists.
+****************************************************/
+template <class T>
+Node <T> * find(Node <T> * pHead, const T & element)
+{
+   for (Node <T> * p = pHead; p; p = p->pNext)
+   {
+      //if the element is equal to the current value,return the pointer to the found node
+      if (p->data == element)
+         return p;
+   }
+
+   return NULL;
+}
+
+/**************************************************
+* operator <<()
+* Display the contents of a given linked-list.
+****************************************************/
+template <class T>
+std::ostream & operator << (std::ostream & out, const Node <T> * pHead)
+{
+   for (const Node <T> * p = pHead; p; p = p->pNext)
+   {
+      if(p->pNext != NULL)
+         out << p->data << ", ";
+      else
+         out << p->data;
+   }
+   return out;
+}
+
+/**************************************************
+* freeData()
+* Release all the memory contained in a given linked-list.
+* The one parameter is a pointer to the head of list.
+****************************************************/
+template <class T>
+void freeData(Node <T> * &pHead)
+{
+   //delate until the node is not empty
+   while (pHead != NULL)
+   {
+      Node <T> * pDelete = pHead;
+      pHead = pHead->pNext;
+      delete pDelete;
+   }
+}
+
+/**************************************************
+* remove()
+* This will remove a given node from the linked list it is attached to.
+* It takes a pointer to a Node as a parameter. this is the node to be
+* deleted. It returns a pointer to the previous node in the list if such
+* a node exists.
+****************************************************/
+template <class T>
+Node <T> * remove(const Node <T> * pRemove)
+{
+   Node <T> * pReturn;
+
+   // if is empty display the error
+   if (NULL == pRemove)
+      return; //pReturn;
+   
+   if (pRemove->pPrev)
+      pRemove->pPrev->pNext = pRemove->pNext;
+
+   if (pRemove->pNext)
+      pRemove->pNext->pPrev = pRemove->pPrev;
+
+   if (pRemove->pPrev)
+      pReturn = pRemove->pPrev;
+   else
+      pReturn = pRemove->pNext;
+
+   delete pRemove;
+
+   return pReturn;
+}
+
+#endif
