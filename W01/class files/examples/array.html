@@ -1,0 +1,260 @@
+<html><head><title>array</title>
+<style><!--
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+  {margin:0in;margin-bottom:.0001pt;font-size:11.0pt;
+   font-family:"Arial","sans-serif";}
+h1
+  {margin-top:0.0pt;margin-right:0in; margin-bottom:0.0pt;
+   margin-left:0in;page-break-after:avoid;background:white;
+   border:none;padding:0in;font-size:14.0pt;color:#4F81BD;
+   font-family:"Arial","sans-serif";font-weight:normal;}
+p.MsoCommentText, li.MsoCommentText, div.MsoCommentText
+  {margin:0in;margin-bottom:.0001pt;font-size:8.0pt;
+   font-family:Consolas;}
+@page WordSection1
+  {size:8.5in 11.0in;
+   margin: 0in .5in 0in .5in;
+   mso-header-margin:.5in;mso-footer-margin:.5in;}
+div.WordSection1
+  {page:WordSection1;}
+--></style>
+</head>
+<body><div class=WordSection1><p style="font-family:Consolas;font-size:11;margin-top:6pt;margin-bottom:6pt"><span style="color:#929ca0">/***********************************************************************<br/>
+&nbsp;*&nbsp;Header:<br/>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;Array<br/>
+&nbsp;*&nbsp;Summary:<br/>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;class&nbsp;contains&nbsp;the&nbsp;notion&nbsp;of&nbsp;an&nbsp;array:&nbsp;a&nbsp;bucket&nbsp;to&nbsp;hold<br/>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;for&nbsp;the&nbsp;user.&nbsp;This&nbsp;is&nbsp;just&nbsp;a&nbsp;starting-point&nbsp;for&nbsp;more&nbsp;advanced<br/>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;constainers&nbsp;such&nbsp;as&nbsp;the&nbsp;vector,&nbsp;set,&nbsp;stack,&nbsp;queue,&nbsp;deque,&nbsp;and&nbsp;map<br/>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;we&nbsp;will&nbsp;build&nbsp;later&nbsp;this&nbsp;semester.<br/>
+&nbsp;*<br/>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;will&nbsp;contain&nbsp;the&nbsp;class&nbsp;definition&nbsp;of:<br/>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;similar&nbsp;to&nbsp;std::array<br/>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array&nbsp;::&nbsp;iterator&nbsp;:&nbsp;an&nbsp;iterator&nbsp;through&nbsp;the&nbsp;array<br/>
+&nbsp;*&nbsp;Author<br/>
+&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;Br.&nbsp;Helfrich<br/>
+&nbsp;************************************************************************/</span><br/>
+<br/>
+<span style="color:#2c62ba">#ifndef</span>&nbsp;ARRAY_H<br/>
+<span style="color:#2c62ba">#define</span>&nbsp;ARRAY_H<br/>
+<br/>
+<span style="color:#2c62ba">#include</span>&nbsp;&lt;cassert&gt;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;because&nbsp;I&nbsp;am&nbsp;paranoid</span><br/>
+<br/>
+<span style="color:#929ca0">//&nbsp;a&nbsp;little&nbsp;helper&nbsp;macro&nbsp;to&nbsp;write&nbsp;debug&nbsp;code</span><br/>
+<span style="color:#2c62ba">#ifdef</span>&nbsp;NDEBUG<br/>
+<span style="color:#2c62ba">#define</span>&nbsp;Debug(statement)<br/>
+<span style="color:#2c62ba">#else</span><br/>
+<span style="color:#2c62ba">#define</span>&nbsp;Debug(statement)&nbsp;statement<br/>
+<span style="color:#2c62ba">#endif</span>&nbsp;<span style="color:#929ca0">//&nbsp;!NDEBUG</span><br/>
+<br/>
+<span style="color:#2c62ba">namespace</span>&nbsp;custom<br/>
+{<br/>
+<br/>
+<span style="color:#929ca0">/************************************************<br/>
+&nbsp;*&nbsp;ARRAY<br/>
+&nbsp;*&nbsp;A&nbsp;class&nbsp;that&nbsp;holds&nbsp;stuff<br/>
+&nbsp;***********************************************/</span><br/>
+<span style="color:#2c62ba">template</span>&nbsp;&lt;class&nbsp;T&gt;<br/>
+<span style="color:#2c62ba">class</span>&nbsp;array<br/>
+{<br/>
+<span style="color:#2c62ba">public</span>:<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;constructors&nbsp;and&nbsp;destructors</span><br/>
+&nbsp;&nbsp;&nbsp;array(<span style="color:#2c62ba">int</span>&nbsp;num);<br/>
+&nbsp;&nbsp;&nbsp;array(<span style="color:#2c62ba">const</span>&nbsp;array&nbsp;&amp;&nbsp;rhs);<br/>
+&nbsp;&nbsp;~array()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;<span style="color:#2c62ba">delete</span>&nbsp;[]&nbsp;data;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;array&nbsp;&amp;&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;=&nbsp;(<span style="color:#2c62ba">const</span>&nbsp;array&nbsp;&amp;&nbsp;rhs);<br/>
+&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;standard&nbsp;container&nbsp;interfaces</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;array&nbsp;treats&nbsp;size&nbsp;and&nbsp;max_size&nbsp;the&nbsp;same</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">int</span>&nbsp;&nbsp;size()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">const</span>&nbsp;{&nbsp;<span style="color:#2c62ba">return</span>&nbsp;num;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">int</span>&nbsp;&nbsp;max_size()&nbsp;<span style="color:#2c62ba">const</span>&nbsp;{&nbsp;<span style="color:#2c62ba">return</span>&nbsp;num;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;array-specific&nbsp;interfaces</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;what&nbsp;would&nbsp;happen&nbsp;if&nbsp;I&nbsp;passed&nbsp;-1&nbsp;or&nbsp;something&nbsp;greater&nbsp;than&nbsp;num?</span><br/>
+&nbsp;&nbsp;&nbsp;T&nbsp;&amp;&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;[]&nbsp;(<span style="color:#2c62ba">int</span>&nbsp;index)<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">return</span>&nbsp;data[index];<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">const</span>&nbsp;T&nbsp;&amp;&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;[]&nbsp;(<span style="color:#2c62ba">int</span>&nbsp;index)&nbsp;<span style="color:#2c62ba">const</span>&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">return</span>&nbsp;data[index];<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;the&nbsp;various&nbsp;iterator&nbsp;interfaces</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">class</span>&nbsp;iterator;<br/>
+&nbsp;&nbsp;&nbsp;iterator&nbsp;begin()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;<span style="color:#2c62ba">return</span>&nbsp;iterator&nbsp;(data);&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;iterator&nbsp;end();<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;a&nbsp;debug&nbsp;utility&nbsp;to&nbsp;display&nbsp;the&nbsp;array</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;this&nbsp;gets&nbsp;compiled&nbsp;to&nbsp;nothing&nbsp;if&nbsp;NDEBUG&nbsp;is&nbsp;defined</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">void</span>&nbsp;display()&nbsp;<span style="color:#2c62ba">const</span>;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;<br/>
+<span style="color:#2c62ba">private</span>:<br/>
+&nbsp;&nbsp;&nbsp;T&nbsp;*&nbsp;data;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;dynamically&nbsp;allocated&nbsp;array&nbsp;of&nbsp;T</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">int</span>&nbsp;num;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;both&nbsp;the&nbsp;capacity&nbsp;and&nbsp;the&nbsp;number&nbsp;of&nbsp;elements</span><br/>
+};<br/>
+<br/>
+<span style="color:#929ca0">/**************************************************<br/>
+&nbsp;*&nbsp;ARRAY&nbsp;ITERATOR<br/>
+&nbsp;*&nbsp;An&nbsp;iterator&nbsp;through&nbsp;array<br/>
+&nbsp;*************************************************/</span><br/>
+<span style="color:#2c62ba">template</span>&nbsp;&lt;class&nbsp;T&gt;<br/>
+<span style="color:#2c62ba">class</span>&nbsp;array&nbsp;&lt;T&gt;&nbsp;::&nbsp;iterator<br/>
+{<br/>
+<span style="color:#2c62ba">public</span>:<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;constructors,&nbsp;destructors,&nbsp;and&nbsp;assignment&nbsp;operator</span><br/>
+&nbsp;&nbsp;&nbsp;iterator()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;p(NULL)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;iterator(T&nbsp;*&nbsp;p)&nbsp;:&nbsp;p(p)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;iterator(<span style="color:#2c62ba">const</span>&nbsp;iterator&nbsp;&amp;&nbsp;rhs)&nbsp;{&nbsp;*this&nbsp;=&nbsp;rhs;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;iterator&nbsp;&amp;&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;=&nbsp;(<span style="color:#2c62ba">const</span>&nbsp;iterator&nbsp;&amp;&nbsp;rhs)<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">this</span>-&gt;p&nbsp;=&nbsp;rhs.p;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">return</span>&nbsp;*this;<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;equals,&nbsp;not&nbsp;equals&nbsp;operator</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">bool</span>&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;!=&nbsp;(<span style="color:#2c62ba">const</span>&nbsp;iterator&nbsp;&amp;&nbsp;rhs)&nbsp;<span style="color:#2c62ba">const</span>&nbsp;{&nbsp;<span style="color:#2c62ba">return</span>&nbsp;rhs.p&nbsp;!=&nbsp;<span style="color:#2c62ba">this</span>-&gt;p;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">bool</span>&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;==&nbsp;(<span style="color:#2c62ba">const</span>&nbsp;iterator&nbsp;&amp;&nbsp;rhs)&nbsp;<span style="color:#2c62ba">const</span>&nbsp;{&nbsp;<span style="color:#2c62ba">return</span>&nbsp;rhs.p&nbsp;==&nbsp;<span style="color:#2c62ba">this</span>-&gt;p;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;dereference&nbsp;operator</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;&amp;&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;*&nbsp;()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;<span style="color:#2c62ba">return</span>&nbsp;*p;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">const</span>&nbsp;T&nbsp;&amp;&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;*&nbsp;()&nbsp;<span style="color:#2c62ba">const</span>&nbsp;{&nbsp;<span style="color:#2c62ba">return</span>&nbsp;*p;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;prefix&nbsp;increment</span><br/>
+&nbsp;&nbsp;&nbsp;iterator&nbsp;&amp;&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;++&nbsp;()<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p++;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">return</span>&nbsp;*this;<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;postfix&nbsp;increment</span><br/>
+&nbsp;&nbsp;&nbsp;iterator&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;++&nbsp;(<span style="color:#2c62ba">int</span>&nbsp;postfix)<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iterator&nbsp;tmp(*this);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p++;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">return</span>&nbsp;tmp;<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<br/>
+<span style="color:#2c62ba">private</span>:<br/>
+&nbsp;&nbsp;&nbsp;T&nbsp;*&nbsp;p;<br/>
+};<br/>
+<br/>
+<br/>
+<span style="color:#929ca0">/********************************************<br/>
+&nbsp;*&nbsp;ARRAY&nbsp;::&nbsp;END<br/>
+&nbsp;*&nbsp;Note&nbsp;that&nbsp;you&nbsp;have&nbsp;to&nbsp;use&nbsp;"typename"&nbsp;before<br/>
+&nbsp;*&nbsp;the&nbsp;return&nbsp;value&nbsp;type<br/>
+&nbsp;********************************************/</span><br/>
+<span style="color:#2c62ba">template</span>&nbsp;&lt;class&nbsp;T&gt;<br/>
+<span style="color:#2c62ba">typename</span>&nbsp;array&nbsp;&lt;T&gt;&nbsp;::&nbsp;iterator&nbsp;array&nbsp;&lt;T&gt;&nbsp;::&nbsp;end&nbsp;()<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">return</span>&nbsp;iterator&nbsp;(data&nbsp;+&nbsp;num);<br/>
+}<br/>
+<br/>
+<span style="color:#929ca0">/*******************************************<br/>
+&nbsp;*&nbsp;ARRAY&nbsp;::&nbsp;Assignment<br/>
+&nbsp;*******************************************/</span><br/>
+<span style="color:#2c62ba">template</span>&nbsp;&lt;class&nbsp;T&gt;<br/>
+array&nbsp;&lt;T&gt;&nbsp;&amp;&nbsp;array&nbsp;&lt;T&gt;&nbsp;::&nbsp;<span style="color:#2c62ba">operator</span>&nbsp;=&nbsp;(<span style="color:#2c62ba">const</span>&nbsp;array&nbsp;&lt;T&gt;&nbsp;&amp;&nbsp;rhs)<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;we&nbsp;can&nbsp;only&nbsp;copy&nbsp;arrays&nbsp;of&nbsp;equal&nbsp;size.&nbsp;Vectors&nbsp;are&nbsp;not&nbsp;this&nbsp;way!</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">if</span>&nbsp;(rhs.size()&nbsp;!=&nbsp;size())<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">throw</span>&nbsp;<span style="color:#466ba6">"ERROR:&nbsp;Unable&nbsp;to&nbsp;copy&nbsp;arrays&nbsp;of&nbsp;different&nbsp;sizes"</span>;<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">assert</span>(num&nbsp;==&nbsp;rhs.num);<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">for</span>&nbsp;(<span style="color:#2c62ba">int</span>&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;num;&nbsp;i++)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[i]&nbsp;=&nbsp;rhs.data[i];<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">return</span>&nbsp;*this;<br/>
+}<br/>
+<br/>
+<span style="color:#929ca0">/*******************************************<br/>
+&nbsp;*&nbsp;ARRAY&nbsp;::&nbsp;COPY&nbsp;CONSTRUCTOR<br/>
+&nbsp;*******************************************/</span><br/>
+<span style="color:#2c62ba">template</span>&nbsp;&lt;class&nbsp;T&gt;<br/>
+array&nbsp;&lt;T&gt;&nbsp;::&nbsp;array(<span style="color:#2c62ba">const</span>&nbsp;array&nbsp;&lt;T&gt;&nbsp;&amp;&nbsp;rhs)&nbsp;<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">assert</span>(rhs.num&nbsp;&gt;=&nbsp;0);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;do&nbsp;nothing&nbsp;if&nbsp;there&nbsp;is&nbsp;nothing&nbsp;to&nbsp;do</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">if</span>&nbsp;(rhs.num&nbsp;==&nbsp;0)<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num&nbsp;=&nbsp;0;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;=&nbsp;NULL;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">return</span>;<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;attempt&nbsp;to&nbsp;allocate</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">try</span><br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;=&nbsp;new&nbsp;T[rhs.num];<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">catch</span>&nbsp;(<span style="color:#2c62ba">std</span>::bad_alloc)<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">throw</span>&nbsp;<span style="color:#466ba6">"ERROR:&nbsp;Unable&nbsp;to&nbsp;allocate&nbsp;buffer"</span>;<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;copy&nbsp;over&nbsp;the&nbsp;capacity</span><br/>
+&nbsp;&nbsp;&nbsp;num&nbsp;=&nbsp;rhs.num;<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;copy&nbsp;the&nbsp;items&nbsp;over&nbsp;one&nbsp;at&nbsp;a&nbsp;time&nbsp;using&nbsp;the&nbsp;assignment&nbsp;operator</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">for</span>&nbsp;(<span style="color:#2c62ba">int</span>&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;num;&nbsp;i++)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[i]&nbsp;=&nbsp;rhs.data[i];<br/>
+}<br/>
+<br/>
+<span style="color:#929ca0">/**********************************************<br/>
+&nbsp;*&nbsp;ARRAY&nbsp;:&nbsp;NON-DEFAULT&nbsp;CONSTRUCTOR<br/>
+&nbsp;*&nbsp;Preallocate&nbsp;the&nbsp;array&nbsp;to&nbsp;"capacity"<br/>
+&nbsp;**********************************************/</span><br/>
+<span style="color:#2c62ba">template</span>&nbsp;&lt;class&nbsp;T&gt;<br/>
+array&nbsp;&lt;T&gt;&nbsp;::&nbsp;array(<span style="color:#2c62ba">int</span>&nbsp;num)&nbsp;<br/>
+{<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">assert</span>(num&nbsp;&gt;=&nbsp;0);<br/>
+&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;do&nbsp;nothing&nbsp;if&nbsp;there&nbsp;is&nbsp;nothing&nbsp;to&nbsp;do.</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;since&nbsp;we&nbsp;can't&nbsp;grow&nbsp;an&nbsp;array,&nbsp;this&nbsp;is&nbsp;kinda&nbsp;pointless</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">if</span>&nbsp;(num&nbsp;==&nbsp;0)<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">this</span>-&gt;num&nbsp;=&nbsp;0;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">this</span>-&gt;data&nbsp;=&nbsp;NULL;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">return</span>;<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;attempt&nbsp;to&nbsp;allocate</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">try</span><br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;=&nbsp;new&nbsp;T[num];<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">catch</span>&nbsp;(<span style="color:#2c62ba">std</span>::bad_alloc)<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">throw</span>&nbsp;<span style="color:#466ba6">"ERROR:&nbsp;Unable&nbsp;to&nbsp;allocate&nbsp;buffer"</span>;<br/>
+&nbsp;&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#929ca0">//&nbsp;copy&nbsp;over&nbsp;the&nbsp;stuff</span><br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">this</span>-&gt;num&nbsp;=&nbsp;num;<br/>
+}<br/>
+<br/>
+<span style="color:#929ca0">/********************************************<br/>
+&nbsp;*&nbsp;ARRAY&nbsp;:&nbsp;DISPLAY<br/>
+&nbsp;*&nbsp;A&nbsp;debug&nbsp;utility&nbsp;to&nbsp;display&nbsp;the&nbsp;contents&nbsp;of&nbsp;the&nbsp;array<br/>
+&nbsp;*******************************************/</span><br/>
+<span style="color:#2c62ba">template</span>&nbsp;&lt;class&nbsp;T&gt;<br/>
+<span style="color:#2c62ba">void</span>&nbsp;array&nbsp;&lt;T&gt;&nbsp;::&nbsp;display()&nbsp;<span style="color:#2c62ba">const</span><br/>
+{<br/>
+<span style="color:#2c62ba">#ifndef</span>&nbsp;NDEBUG<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">std</span>::cerr&nbsp;&lt;&lt;&nbsp;<span style="color:#466ba6">"array&lt;T&gt;::display()\n"</span>;<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">std</span>::cerr&nbsp;&lt;&lt;&nbsp;<span style="color:#466ba6">"\tnum&nbsp;=&nbsp;"</span>&nbsp;&lt;&lt;&nbsp;num&nbsp;&lt;&lt;&nbsp;<span style="color:#466ba6">"\n"</span>;<br/>
+&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">for</span>&nbsp;(<span style="color:#2c62ba">int</span>&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;num;&nbsp;i++)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2c62ba">std</span>::cerr&nbsp;&lt;&lt;&nbsp;<span style="color:#466ba6">"\tdata["</span>&nbsp;&lt;&lt;&nbsp;i&nbsp;&lt;&lt;&nbsp;<span style="color:#466ba6">"]&nbsp;=&nbsp;"</span>&nbsp;&lt;&lt;&nbsp;data[i]&nbsp;&lt;&lt;&nbsp;<span style="color:#466ba6">"\n"</span>;<br/>
+<span style="color:#2c62ba">#endif</span>&nbsp;<span style="color:#929ca0">//&nbsp;NDEBUG</span><br/>
+}<br/>
+<br/>
+};&nbsp;<span style="color:#929ca0">//&nbsp;namespace&nbsp;custom</span><br/>
+<br/>
+<span style="color:#2c62ba">#endif</span>&nbsp;<span style="color:#929ca0">//&nbsp;ARRAY_H</span><br/>
+<br/>
+ </p>
+</div></body></html>
